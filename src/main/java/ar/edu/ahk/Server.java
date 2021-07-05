@@ -40,7 +40,7 @@ public class Server implements MqttCallback {
 	app.get("/test",ctx -> {
 	
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-                HttpGet request = new HttpGet("https://web-ahk.herokuapp.com/termometro/32");
+                HttpGet request = new HttpGet("https://git.heroku.com/ahkblipo.git");
                 System.out.println(httpClient.execute(request).getEntity().toString());
                 
 	});
