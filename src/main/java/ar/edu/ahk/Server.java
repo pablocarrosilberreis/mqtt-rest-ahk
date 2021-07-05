@@ -68,8 +68,8 @@ public class Server implements MqttCallback {
             this.client = new MqttClient(brokerUrl, clientId, persistence);
             System.out.println("Starting: " + clientId);
             MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setUserName("eze");
-            connOpts.setPassword("123".toCharArray());
+            connOpts.setUserName("ahkpabloheroku");
+            connOpts.setPassword("lunes001".toCharArray());
             connOpts.setCleanSession(true);
             System.out.println("checking");
             System.out.println("Mqtt Connecting to broker: " + brokerUrl);
