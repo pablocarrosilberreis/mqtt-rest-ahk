@@ -5,10 +5,30 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class Server implements MqttCallback {
+   
+    private String tempActual = "?";
+    private MqttClient client ;
+    public MqttClient getClient(){
+    return client;
+    }
+
+    public String getTempActual(){
+    	return tempActual;
+    }
+
     public static void main(String[] args) {
+	Server mqttServ = new Server();
         Javalin app = Javalin.create().start(getHerokuAssignedPort());
-        app.get("/", ctx -> ctx.result("Test AHK MQTT"));
-	new Server().subscribe(System.getenv("MQTTClient"));
+        app.get("/", ctx -> ctx.result("Test AHK MQTT - temometro: " + mqttServ.getTempActual()));
+        app.get("/termometro/:temp", ctx -> {
+		int qos             = 2;
+		String temp = ctx.pathParam("temp") ;
+		MqttMessage message = new MqttMessage(temp.getBytes());
+                message.setQos(qos);
+                mqttServ.getClient().publish("temp", message);
+	}
+	);
+	mqttServ.subscribe(System.getenv("MQTTClient"));
     }
 
     private static int getHerokuAssignedPort() {
@@ -20,7 +40,6 @@ public class Server implements MqttCallback {
     }
 
     private static final String brokerUrl ="tcp://node02.myqtthub.com:1883";
-//    private static final String brokerUrl ="tcp://node02.myqtthub.com:1883";
 
     /** The topic. */
     private static final String topic = "temp";
@@ -30,7 +49,7 @@ public class Server implements MqttCallback {
         MemoryPersistence persistence = new MemoryPersistence();
         try
         {
-            MqttClient sampleClient = new MqttClient(brokerUrl, clientId, persistence);
+            MqttClient client = new MqttClient(brokerUrl, clientId, persistence);
             System.out.println("Starting: " + clientId);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setUserName("eze");
@@ -38,10 +57,10 @@ public class Server implements MqttCallback {
             connOpts.setCleanSession(true);
             System.out.println("checking");
             System.out.println("Mqtt Connecting to broker: " + brokerUrl);
-            sampleClient.connect(connOpts);
+            client.connect(connOpts);
             System.out.println("Mqtt Connected");
-            sampleClient.setCallback(this);
-            sampleClient.subscribe(topic);
+            client.setCallback(this);
+            client.subscribe(topic);
             System.out.println("Subscribed");
             System.out.println("Listening");
 
