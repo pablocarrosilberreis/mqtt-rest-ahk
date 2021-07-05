@@ -15,6 +15,9 @@ public class Server implements MqttCallback {
     public String getTempActual(){
     	return tempActual;
     }
+    public void setTempActual(String tempActual){
+     this.tempActual = tempActual;
+    }
 
     public static void main(String[] args) {
 	Server mqttServ = new Server();
@@ -26,6 +29,8 @@ public class Server implements MqttCallback {
 		MqttMessage message = new MqttMessage(temp.getBytes());
                 message.setQos(qos);
                 mqttServ.getClient().publish("temp", message);
+                mqttServ.setTempActual(temp);
+		ctx.result("temometro actualizado: " + mqttServ.getTempActual());
 	}
 	);
 	mqttServ.subscribe(System.getenv("MQTTClient"));
