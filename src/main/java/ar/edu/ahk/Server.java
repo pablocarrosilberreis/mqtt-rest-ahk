@@ -76,6 +76,7 @@ public class Server implements MqttCallback {
     public void deliveryComplete(IMqttDeliveryToken arg0) {
     }
     public void messageArrived(String topic, MqttMessage message) {
+	this.tempActual = message.toString();
         System.out.println("Topic:" + topic);
         System.out.println("Message: " +message.toString());
     }
