@@ -4,6 +4,10 @@ import io.javalin.Javalin;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
 public class Server implements MqttCallback {
    
     private String tempActual = "?";
@@ -33,6 +37,13 @@ public class Server implements MqttCallback {
 		ctx.result("temometro actualizado: " + mqttServ.getTempActual());
 	}
 	);
+	app.get("/test",ctx -> {
+	
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+                HttpGet request = new HttpGet("https://web-ahk.herokuapp.com/termometro/32");
+                System.out.println(httpClient.execute(request).getEntity().toString());
+                
+	});
 	mqttServ.subscribe(System.getenv("MQTTClient"));
     }
 
