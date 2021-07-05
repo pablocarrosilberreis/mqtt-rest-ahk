@@ -49,7 +49,7 @@ public class Server implements MqttCallback {
         MemoryPersistence persistence = new MemoryPersistence();
         try
         {
-            MqttClient client = new MqttClient(brokerUrl, clientId, persistence);
+            this.client = new MqttClient(brokerUrl, clientId, persistence);
             System.out.println("Starting: " + clientId);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setUserName("eze");
